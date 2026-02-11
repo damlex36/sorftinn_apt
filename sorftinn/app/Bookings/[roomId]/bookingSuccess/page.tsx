@@ -1,4 +1,6 @@
+// app/Bookings/[roomId]/bookingSuccess/page.tsx
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -16,38 +18,23 @@ export default function BookingSuccess() {
     return `SFT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
   });
 
-  // Optional: fallback UI while generating (almost never visible)
-  if (!bookingRef) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading confirmation...
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Decorative background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-azure/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-teal/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-lg animate-fade-up">
-        {/* Success Icon */}
         <div className="flex justify-center mb-8">
           <div className="relative">
             <div className="absolute inset-0 bg-azure/20 rounded-full blur-xl scale-150 animate-pulse" />
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-azure to-teal flex items-center justify-center">
-              <CheckCircle
-                className="w-12 h-12 text-background"
-                strokeWidth={2.5}
-              />
+              <CheckCircle className="w-12 h-12 text-background" strokeWidth={2.5} />
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="text-center mb-8">
           <p className="text-azure text-sm tracking-[0.3em] uppercase mb-3 animate-fade-up delay-100">
             Reservation Confirmed
@@ -61,7 +48,6 @@ export default function BookingSuccess() {
           </p>
         </div>
 
-        {/* Booking Reference Card */}
         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-xl mb-6 animate-fade-up delay-400">
           <div className="p-6">
             <div className="text-center mb-6">
@@ -113,7 +99,6 @@ export default function BookingSuccess() {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 animate-fade-up delay-500">
           <Link
             href="/"
