@@ -59,7 +59,7 @@ export default function HeroWithNavbar() {
       return;
     }
 
-    // No alert needed anymore — navigation happens via <Link>
+    // Form is valid → navigation is handled by the Link inside the button
   };
 
   /* Auto slide */
@@ -98,7 +98,7 @@ export default function HeroWithNavbar() {
             priority={index === 0}
           />
 
-          {/* HERO TEXT + SEARCH */}
+          {/* HERO TEXT + SEARCH FORM */}
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-white px-6">
             <h1 className="text-5xl md:text-7xl font-bold mb-4">
               {slide.title}
@@ -121,7 +121,7 @@ export default function HeroWithNavbar() {
                     type="date"
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
-                    className="px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-amber-400"
+                    className="px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400 transition"
                   />
                 </div>
 
@@ -134,7 +134,7 @@ export default function HeroWithNavbar() {
                     type="date"
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
-                    className="px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-amber-400"
+                    className="px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400 transition"
                   />
                 </div>
 
@@ -179,7 +179,7 @@ export default function HeroWithNavbar() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.jpg" alt="Logo" width={44} height={44} />
             <span
               className={`text-2xl font-bold ${
@@ -188,26 +188,40 @@ export default function HeroWithNavbar() {
             >
               Sorftinn Apartment
             </span>
-          </a>
+          </Link>
 
-          {/* Desktop Links */}
-          <nav className="hidden md:flex gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className={`font-medium transition ${
-                  scrolled
-                    ? "text-gray-700 hover:text-amber-600"
-                    : "text-white hover:text-amber-400"
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
+          {/* Desktop Navigation + Sign In */}
+          <div className="hidden md:flex items-center gap-8">
+            <nav className="flex gap-8">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={`font-medium transition ${
+                    scrolled
+                      ? "text-gray-700 hover:text-amber-600"
+                      : "text-white hover:text-amber-400"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
 
-          {/* Mobile Button */}
+            {/* Sign In Button (Desktop) */}
+            <Link
+              href="/auth"
+              className={`font-medium px-6 py-2.5 rounded-lg transition ${
+                scrolled
+                  ? "bg-amber-600 hover:bg-amber-700 text-white shadow-md"
+                  : "bg-white/20 hover:bg-white/30 text-white border border-white/40"
+              }`}
+            >
+              Sign In
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className={`md:hidden ${
@@ -222,23 +236,37 @@ export default function HeroWithNavbar() {
 
       {/* ================= MOBILE MENU ================= */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40" onClick={() => setMenuOpen(false)}>
-          <div 
-            className="w-72 bg-white h-full p-8" 
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside menu
+        <div
+          className="fixed inset-0 z-50 bg-black/40"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="w-72 bg-white h-full p-8 ml-auto"
+            onClick={(e) => e.stopPropagation()}
           >
-            <nav className="flex flex-col gap-6">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="text-lg font-medium text-gray-800 hover:text-amber-600 transition"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
+            <div className="flex flex-col h-full">
+              <nav className="flex flex-col gap-6 mb-10">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-lg font-medium text-gray-800 hover:text-amber-600 transition"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+
+              {/* Sign In in Mobile Menu */}
+              <Link
+                href="/auth"
+                onClick={() => setMenuOpen(false)}
+                className="mt-auto block w-full py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-center transition"
+              >
+                Sign In
+              </Link>
+            </div>
           </div>
         </div>
       )}

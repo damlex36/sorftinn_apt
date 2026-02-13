@@ -134,3 +134,16 @@ background-color: var(--bg-dark);
   background-color: var(--bg-dark);
   color: white;
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slow-pan {
+  animation: slowPan 32s infinite alternate ease-in-out;
+  background-size: 115% auto;
+}

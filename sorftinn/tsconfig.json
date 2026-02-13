@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "node",
     "target": "ES2023",
     "strict": true,
     "esModuleInterop": true,
@@ -10,6 +9,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "noEmit": true,
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
