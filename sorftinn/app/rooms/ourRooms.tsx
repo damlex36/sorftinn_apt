@@ -1,14 +1,14 @@
 // app/rooms/page.tsx
-import Image from 'next/image';
+import RoomCard from "./roomCard"; // Import the carousel RoomCard
 
-// Django RoomModel + RoomImage shape (USED DIRECTLY)
+// Types that match your Django backend
 type RoomImage = {
   id: number;
   image: string;
   caption: string;
 };
 
-type Room = {
+type DjangoRoom = {
   id: number | string;
   room_name: string;
   room_number: string;
@@ -18,84 +18,38 @@ type Room = {
   images?: RoomImage[];
 };
 
-function RoomCard({ room }: { room: Room }) {
-  const {
-    room_name,
-    room_number,
-    room_type,
-    capacity,
-    price_per_night,
-    images,
-  } = room;
-
-  const displayPrice =
-    typeof price_per_night === 'string'
-      ? parseFloat(price_per_night)
-      : price_per_night;
-
-  const mainImage =
-    images?.[0]?.image ||
-    'https://images.unsplash.com/photo-1578683015146-b644c6a0ec6f?w=800';
-
-  return (
-    <div className="group bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-800">
-      <div className="relative h-56 overflow-hidden">
-        <Image
-          src={mainImage}
-          alt={room_name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          placeholder="blur"
-          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMyMjIiLz48L3N2Zz4="
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-      </div>
-
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-white mb-2">
-          {room_name}
-        </h3>
-
-        <p className="text-gray-400 text-sm mb-5 line-clamp-3 min-h-[4.5rem]">
-          Room #{room_number} – {room_type}
-        </p>
-
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-2xl font-bold text-white">
-              ₦{isNaN(displayPrice) ? '—' : displayPrice.toFixed(2)}
-            </span>
-            <span className="text-gray-500 text-sm"> / night</span>
-          </div>
-
-          <div className="flex items-center text-gray-400 text-sm">
-            <span>↑ {capacity}</span>
-            <span className="ml-1">guests</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+// Transform Django data to match what RoomCard expects
+const transformRoomData = (djangoRoom: DjangoRoom) => {
+  return {
+    id: Number(djangoRoom.id),
+    name: djangoRoom.room_name,
+    price: typeof djangoRoom.price_per_night === 'string' 
+      ? parseFloat(djangoRoom.price_per_night) 
+      : djangoRoom.price_per_night,
+    description: `${djangoRoom.room_type} room - Room #${djangoRoom.room_number}`,
+    images: djangoRoom.images?.map(img => img.image) || [],
+    maxOccupancy: djangoRoom.capacity
+  };
+};
 
 export default async function RoomsPage() {
-  let rooms: Room[] = [];
+  let rooms: DjangoRoom[] = [];
   let error: string | null = null;
 
   try {
-    const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
-    const response = await fetch(`${apiBase}/api/rooms/available/`, {
-      method: 'POST',
+    // Use GET with query parameters (NOT POST)
+    const params = new URLSearchParams({
+      check_in: '2026-02-10',
+      check_out: '2026-02-12',
+    });
+
+    const response = await fetch(`${apiBase}/api/rooms/available/?${params.toString()}`, {
+      method: 'GET', // Changed from POST to GET
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
-      body: JSON.stringify({
-        check_in: '2026-02-10',
-        check_out: '2026-02-12',
-      }),
+      // No body for GET requests
     });
 
     if (!response.ok) {
@@ -103,13 +57,15 @@ export default async function RoomsPage() {
     }
 
     const data = await response.json();
-
-    // ✅ DIRECT USE — matches Django serializer fields
     rooms = Array.isArray(data) ? data : [];
+    
   } catch (err: unknown) {
     console.error('Failed to fetch available rooms:', err);
     error = 'Unable to load available rooms right now. Please try again later.';
   }
+
+  // Transform rooms for the card component
+  const transformedRooms = rooms.map(transformRoomData);
 
   return (
     <section className="bg-gray-950 text-white min-h-screen py-20">
@@ -129,13 +85,13 @@ export default async function RoomsPage() {
           </div>
         )}
 
-        {rooms.length === 0 && !error ? (
+        {transformedRooms.length === 0 && !error ? (
           <div className="text-center text-gray-400 py-20 text-xl">
             No rooms available for the selected dates.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {rooms.map((room) => (
+            {transformedRooms.map((room) => (
               <RoomCard key={room.id} room={room} />
             ))}
           </div>
