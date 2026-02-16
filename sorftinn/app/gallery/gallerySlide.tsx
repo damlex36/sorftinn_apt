@@ -18,7 +18,7 @@ const galleryImages = [
   { src: "/carousel/caro2.png", title: "Grand Lobby", category: "Public Spaces" },
   { src: "/carousel/caro3.png", title: "Deluxe Room", category: "Rooms" },
   { src: "/carousel/caro4.png", title: "Classic Room", category: "Rooms" },
-  { src: "/carousel/caro5.png", title: "Penthouse View", category: "Suites" },
+  { src: "/carousel/caro5.jpg", title: "Penthouse View", category: "Suites" },
 ];
 
 export function GallerySlides() {

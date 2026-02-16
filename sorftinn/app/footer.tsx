@@ -134,7 +134,7 @@ export function Footer() {
         <div className="container mx-auto px-6 lg:px-12 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="font-body text-xs text-muted-foreground">
-              © 2024 Sorftinn Hotel. All rights reserved. <br />
+              © 2026 Sorftinn Hotel. All rights reserved. <br />
               © 2026 Damola — Original Author
             </p>
             <div className="flex gap-6">
