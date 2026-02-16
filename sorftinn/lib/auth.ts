@@ -26,3 +26,10 @@ export async function loginUser(email: string, password: string): Promise<LoginR
     throw err;
   }
 }
+
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */

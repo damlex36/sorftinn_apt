@@ -1,3 +1,10 @@
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */
+
 // app/Bookings/page.tsx
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -258,3 +265,10 @@ export default async function BookingsPage({
     </div>
   );
 }
+
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */

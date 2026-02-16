@@ -119,3 +119,11 @@ export default function StaffLoginPage() {
     </div>
   );
 }
+
+
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */

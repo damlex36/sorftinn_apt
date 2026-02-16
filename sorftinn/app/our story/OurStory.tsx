@@ -1,3 +1,10 @@
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */
+
 export default function OurStory() {
   const stats = [
     { number: "130+", label: "Years of Excellence" },

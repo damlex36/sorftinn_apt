@@ -1,3 +1,11 @@
+
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";

@@ -31,3 +31,10 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+
+/**
+ * SorftInn Hotel App
+ * © 2026 Damola
+ * Licensed under MIT
+ */

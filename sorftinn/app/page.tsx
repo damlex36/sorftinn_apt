@@ -1,4 +1,9 @@
 
+/**
+ * © 2026 Damola
+ */
+
+
 import Navbar from "./navbar";
 import WhyChooseSorfinn from "./whychoose/WhyChooseSorfinn";
 import OurStory from "./our story/OurStory";
