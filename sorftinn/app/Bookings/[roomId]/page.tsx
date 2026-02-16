@@ -1,8 +1,8 @@
 // app/Bookings/[roomId]/page.tsx
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import ImageCarousel from '../imageCarousel';           // assuming this is at app/Bookings/imageCarousel.tsx
-import BookingForm from './BookingForm';               // the client form we created
+import ImageCarousel from '../imageCarousel';           
+import BookingForm from './BookingForm';      
 
 type SearchParams = {
   checkIn?: string;
@@ -26,6 +26,44 @@ type ApiRoom = {
   capacity: number;
   description?: string | null;
   images: ApiRoomImage[];
+};
+
+// Helper to get full Cloudinary URL
+const getFullImageUrl = (url: string): string => {
+  if (!url) return '';
+  
+  try {
+    // If it's already a complete URL, validate and return it
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      new URL(url); // Validate URL
+      return url;
+    }
+    
+    // If it's a Cloudinary URL without protocol
+    if (url.includes('cloudinary') || url.includes('image/upload')) {
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
+      const fullUrl = `https://res.cloudinary.com/${cloudName}/${url}`;
+      new URL(fullUrl); // Validate URL
+      return fullUrl;
+    }
+    
+    // If it starts with a slash, it's a relative path to your backend
+    if (url.startsWith('/')) {
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
+      const fullUrl = `${apiBase}${url}`;
+      new URL(fullUrl); // Validate URL
+      return fullUrl;
+    }
+    
+    // Default case - assume it's a Cloudinary path
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
+    const fullUrl = `https://res.cloudinary.com/${cloudName}/${url}`;
+    new URL(fullUrl); // Validate URL
+    return fullUrl;
+  } catch {
+    console.error('Invalid URL:', url);
+    return ''; // Return empty string for invalid URLs
+  }
 };
 
 export default async function RoomBookingPage({
@@ -153,6 +191,11 @@ export default async function RoomBookingPage({
     day: 'numeric',
   });
 
+  // Process images to get full URLs
+  const processedImages = room.images
+    .map(img => getFullImageUrl(img.image))
+    .filter(Boolean); // Remove any empty strings
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sticky Header */}
@@ -181,9 +224,9 @@ export default async function RoomBookingPage({
               </p>
             </div>
 
-            {/* Carousel */}
+            {/* Carousel - with processed images */}
             <div className="rounded-2xl overflow-hidden shadow-lg">
-              <ImageCarousel images={room.images.map((img) => img.image)} />
+              <ImageCarousel images={processedImages} />
             </div>
 
             {/* Stay summary */}

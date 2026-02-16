@@ -68,7 +68,7 @@ export default async function RoomsPage() {
   const transformedRooms = rooms.map(transformRoomData);
 
   return (
-    <section className="bg-gray-950 text-white min-h-screen py-20">
+    <section id="rooms" className="bg-gray-950 text-white min-h-screen py-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-light tracking-widest uppercase mb-4">

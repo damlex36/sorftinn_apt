@@ -1,12 +1,9 @@
 // app/Bookings/page.tsx
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import ImageCarousel from './imageCarousel'; // adjust path if needed
+import ImageCarousel from './imageCarousel';
 
-// Type for images (matches your ImageCarousel component)
-type RoomImage = string | { url: string; alt?: string };
-
-// Shape of room from your Django API (adjust field names if different)
+// Shape of room from your Django API
 type ApiRoom = {
   id: number;
   room_name: string;
@@ -24,9 +21,35 @@ interface Room {
   name: string;
   price: number;
   description: string | null;
-  images: string[];           // flattened to string[]
+  images: string[];
   maxOccupancy: number;
 }
+
+// Helper to get full Cloudinary URL
+const getFullImageUrl = (url: string): string => {
+  if (!url) return '';
+  
+  // If it's already a complete URL, return it
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // If it's a Cloudinary URL without protocol
+  if (url.includes('cloudinary') || url.includes('image/upload')) {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
+    return `https://res.cloudinary.com/${cloudName}/${url}`;
+  }
+  
+  // If it starts with a slash, it's a relative path to your backend
+  if (url.startsWith('/')) {
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
+    return `${apiBase}${url}`;
+  }
+  
+  // Default case - assume it's a Cloudinary path
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
+  return `https://res.cloudinary.com/${cloudName}/${url}`;
+};
 
 export default async function BookingsPage({
   searchParams,
@@ -78,16 +101,23 @@ export default async function BookingsPage({
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
-    const response = await fetch(`${apiBase}/api/rooms/available/`, {
-      method: 'POST',
+    // Create URLSearchParams with conditional values
+    const queryParams = new URLSearchParams();
+    
+    // Only append if values exist
+    if (checkInStr) {
+      queryParams.append('check_in', checkInStr);
+    }
+    if (checkOutStr) {
+      queryParams.append('check_out', checkOutStr);
+    }
+
+    const response = await fetch(`${apiBase}/api/rooms/available/?${queryParams.toString()}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store', // always fresh availability
-      body: JSON.stringify({
-        check_in: checkInStr,
-        check_out: checkOutStr,
-      }),
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -99,16 +129,17 @@ export default async function BookingsPage({
     // Handle array or { results: [...] } pattern (common in DRF pagination)
     const rawRooms: ApiRoom[] = Array.isArray(data) ? data : data.results || data.data || [];
 
-    // Map to UI-friendly Room type
+    // Map to UI-friendly Room type with full image URLs
     availableRooms = rawRooms.map((r: ApiRoom) => ({
       id: r.id,
       name: r.room_name,
       price: typeof r.price_per_night === 'string' ? parseFloat(r.price_per_night) : r.price_per_night,
       description: r.description || null,
       images: Array.isArray(r.images)
-        ? r.images.map(img =>
-            typeof img === 'string' ? img : img.image || ''
-          ).filter(Boolean)
+        ? r.images.map(img => {
+            const imageUrl = typeof img === 'string' ? img : img.image || '';
+            return getFullImageUrl(imageUrl);
+          }).filter(Boolean)
         : [],
       maxOccupancy: r.capacity,
     }));

@@ -54,6 +54,7 @@ export default function RoomCard({ room }: { room: Room }) {
       
       {/* Carousel */}
       <div className="relative aspect-16/11 overflow-hidden bg-gray-800">
+      
         {total > 0 && currentImage && !imageError ? (
           <>
             <Image
