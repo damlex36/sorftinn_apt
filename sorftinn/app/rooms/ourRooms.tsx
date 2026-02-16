@@ -1,5 +1,6 @@
 // app/rooms/page.tsx
-import RoomCard from "./roomCard"; // Import the carousel RoomCard
+import RoomCard from "./roomCard";
+import ImagePreloader from "../components/ImagePreloader";
 
 // Types that match your Django backend
 type RoomImage = {
@@ -18,8 +19,35 @@ type DjangoRoom = {
   images?: RoomImage[];
 };
 
+// Helper to get full Cloudinary URL (keep this DRY)
+const getFullImageUrl = (url: string): string => {
+  if (!url) return '';
+  
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  if (url.includes('cloudinary') || url.includes('image/upload')) {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
+    return `https://res.cloudinary.com/${cloudName}/${url}`;
+  }
+  
+  if (url.startsWith('/')) {
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
+    return `${apiBase}${url}`;
+  }
+  
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
+  return `https://res.cloudinary.com/${cloudName}/${url}`;
+};
+
 // Transform Django data to match what RoomCard expects
 const transformRoomData = (djangoRoom: DjangoRoom) => {
+  // Process images to full URLs during transformation
+  const processedImages = djangoRoom.images
+    ?.map(img => getFullImageUrl(img.image))
+    .filter(Boolean) || [];
+  
   return {
     id: Number(djangoRoom.id),
     name: djangoRoom.room_name,
@@ -27,7 +55,7 @@ const transformRoomData = (djangoRoom: DjangoRoom) => {
       ? parseFloat(djangoRoom.price_per_night) 
       : djangoRoom.price_per_night,
     description: `${djangoRoom.room_type} room - Room #${djangoRoom.room_number}`,
-    images: djangoRoom.images?.map(img => img.image) || [],
+    images: processedImages,
     maxOccupancy: djangoRoom.capacity
   };
 };
@@ -39,17 +67,15 @@ export default async function RoomsPage() {
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
-    // Use GET with query parameters (NOT POST)
     const params = new URLSearchParams({
       check_in: '2026-02-10',
       check_out: '2026-02-12',
     });
 
     const response = await fetch(`${apiBase}/api/rooms/available/?${params.toString()}`, {
-      method: 'GET', // Changed from POST to GET
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
-      // No body for GET requests
     });
 
     if (!response.ok) {
@@ -66,9 +92,15 @@ export default async function RoomsPage() {
 
   // Transform rooms for the card component
   const transformedRooms = rooms.map(transformRoomData);
+  
+  // Collect all images from all rooms for preloading
+  const allImages = transformedRooms.flatMap(room => room.images);
 
   return (
     <section id="rooms" className="bg-gray-950 text-white min-h-screen py-20">
+      {/* Image Preloader - loads all images in background */}
+      <ImagePreloader images={allImages} />
+      
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-light tracking-widest uppercase mb-4">

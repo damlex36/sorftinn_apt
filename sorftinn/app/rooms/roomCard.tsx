@@ -8,7 +8,7 @@ interface Room {
   name: string;
   price: number;
   description: string | null;
-  images: string[];
+  images: string[]; // Now contains full URLs
   maxOccupancy: number;
 }
 
@@ -20,34 +20,7 @@ export default function RoomCard({ room }: { room: Room }) {
   const next = () => setIndex((prev) => (prev + 1) % total);
   const prev = () => setIndex((prev) => (prev - 1 + total) % total);
 
-  // Helper to get full Cloudinary URL
-  const getFullImageUrl = (url: string) => {
-    if (!url) return null;
-    
-    // If it's already a complete URL, return it
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-    
-    // If it's a Cloudinary URL without protocol, add https:// and your cloud name
-    if (url.includes('cloudinary') || url.includes('image/upload')) {
-      // Get cloud name from env or use default
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
-      return `https://res.cloudinary.com/${cloudName}/${url}`;
-    }
-    
-    // If it starts with a slash, it's a relative path to your backend
-    if (url.startsWith('/')) {
-      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
-      return `${apiBase}${url}`;
-    }
-    
-    // If it doesn't start with http, https, or /, assume it's a Cloudinary path
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'devo42kc9';
-    return `https://res.cloudinary.com/${cloudName}/${url}`;
-  };
-
-  const currentImage = room.images[index] ? getFullImageUrl(room.images[index]) : null;
+  const currentImage = room.images[index];
 
   return (
     <div className="group bg-gray-900 rounded-3xl overflow-hidden border border-gray-800 shadow-lg hover:shadow-2xl transition-all duration-500">
@@ -65,7 +38,7 @@ export default function RoomCard({ room }: { room: Room }) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               onError={() => setImageError(true)}
               priority={index === 0}
-              unoptimized // Add this for Cloudinary images if needed
+              // Remove unoptimized if not needed
             />
 
             {/* Overlay */}
