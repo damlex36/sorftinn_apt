@@ -6,7 +6,7 @@ import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer id="contact"  className=" footer  border-t border-border">
+    <footer id="contact" className="footer border-t border-border">
       {/* Newsletter Section */}
       <div className="border-b border-border">
         <div className="container mx-auto px-6 lg:px-12 py-16">
@@ -23,7 +23,7 @@ export function Footer() {
                 placeholder="Enter your email"
                 className="bg-background border-border text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-gold focus:border-gold transition-all"
               />
-              <Button  className="hover:scale-105 transition-transform duration-300">
+              <Button className="hover:scale-105 transition-transform duration-300">
                 Subscribe
               </Button>
             </div>
@@ -134,7 +134,8 @@ export function Footer() {
         <div className="container mx-auto px-6 lg:px-12 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="font-body text-xs text-muted-foreground">
-              © 2024 Sorftinn Hotel. All rights reserved.
+              © 2024 Sorftinn Hotel. All rights reserved. <br />
+              © 2026 Damola — Original Author
             </p>
             <div className="flex gap-6">
               {["Privacy Policy", "Terms of Service", "Accessibility"].map((link) => (
