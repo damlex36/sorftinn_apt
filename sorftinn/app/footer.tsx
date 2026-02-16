@@ -6,7 +6,7 @@ import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer id="contact" className=" footer  border-t border-border">
+    <footer id="contact"  className=" footer  border-t border-border">
       {/* Newsletter Section */}
       <div className="border-b border-border">
         <div className="container mx-auto px-6 lg:px-12 py-16">
