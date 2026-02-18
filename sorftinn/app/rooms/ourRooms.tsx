@@ -1,8 +1,7 @@
-// app/rooms/page.tsx
 import RoomCard from "./roomCard";
 import ImagePreloader from "../components/ImagePreloader";
 
-// Types that match your Django backend
+// Types
 type RoomImage = {
   id: number;
   image: string;
@@ -17,9 +16,10 @@ type DjangoRoom = {
   capacity: number;
   price_per_night: number | string;
   images?: RoomImage[];
+  is_available?: boolean;
 };
 
-// Helper to get full Cloudinary URL (keep this DRY)
+// Helper to get full Cloudinary URL
 const getFullImageUrl = (url: string): string => {
   if (!url) return '';
   
@@ -41,9 +41,8 @@ const getFullImageUrl = (url: string): string => {
   return `https://res.cloudinary.com/${cloudName}/${url}`;
 };
 
-// Transform Django data to match what RoomCard expects
+// Transform Django data
 const transformRoomData = (djangoRoom: DjangoRoom) => {
-  // Process images to full URLs during transformation
   const processedImages = djangoRoom.images
     ?.map(img => getFullImageUrl(img.image))
     .filter(Boolean) || [];
@@ -56,49 +55,64 @@ const transformRoomData = (djangoRoom: DjangoRoom) => {
       : djangoRoom.price_per_night,
     description: `${djangoRoom.room_type} room - Room #${djangoRoom.room_number}`,
     images: processedImages,
-    maxOccupancy: djangoRoom.capacity
+    maxOccupancy: djangoRoom.capacity,
+    isAvailable: djangoRoom.is_available ?? true
   };
 };
 
-export default async function RoomsPage() {
+export default async function RoomsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ checkIn?: string; checkOut?: string }>
+}) {
+  const params = await searchParams;
+  const checkIn = params.checkIn || '2026-02-10';
+  const checkOut = params.checkOut || '2026-02-12';
+  
   let rooms: DjangoRoom[] = [];
   let error: string | null = null;
 
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
-    const params = new URLSearchParams({
-      check_in: '2026-02-10',
-      check_out: '2026-02-12',
+    const queryParams = new URLSearchParams({
+      check_in: checkIn,
+      check_out: checkOut,
     });
 
-    const response = await fetch(`${apiBase}/api/rooms/available/?${params.toString()}`, {
+    const response = await fetch(`${apiBase}/api/rooms/available/?${queryParams.toString()}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
+      next: { revalidate: 0 }
     });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+      throw new Error(`API error: ${response.status}`);
     }
 
     const data = await response.json();
     rooms = Array.isArray(data) ? data : [];
     
   } catch (err: unknown) {
-    console.error('Failed to fetch available rooms:', err);
-    error = 'Unable to load available rooms right now. Please try again later.';
+    console.error('Failed to fetch rooms:', err);
+    error = 'Unable to load rooms. Please try again later.';
   }
 
-  // Transform rooms for the card component
-  const transformedRooms = rooms.map(transformRoomData);
+  // Transform rooms and sort (available first)
+  const transformedRooms = rooms
+    .map(transformRoomData)
+    .sort((a, b) => {
+      if (a.isAvailable && !b.isAvailable) return -1;
+      if (!a.isAvailable && b.isAvailable) return 1;
+      return 0;
+    });
   
-  // Collect all images from all rooms for preloading
+  // Collect all images for preloading
   const allImages = transformedRooms.flatMap(room => room.images);
 
   return (
     <section id="rooms" className="bg-gray-950 text-white min-h-screen py-20">
-      {/* Image Preloader - loads all images in background */}
       <ImagePreloader images={allImages} />
       
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -108,6 +122,9 @@ export default async function RoomsPage() {
           </h1>
           <p className="text-gray-400 text-lg max-w-3xl mx-auto">
             Discover refined comfort and timeless elegance in our carefully curated collection of rooms and suites.
+          </p>
+          <p className="text-amber-400 mt-4">
+            📅 Showing availability for: {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()}
           </p>
         </div>
 
@@ -119,13 +136,26 @@ export default async function RoomsPage() {
 
         {transformedRooms.length === 0 && !error ? (
           <div className="text-center text-gray-400 py-20 text-xl">
-            No rooms available for the selected dates.
+            No rooms found for the selected criteria.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
             {transformedRooms.map((room) => (
               <RoomCard key={room.id} room={room} />
             ))}
+          </div>
+        )}
+        
+        {/* Availability Summary */}
+        {transformedRooms.length > 0 && (
+          <div className="mt-12 text-center text-gray-400 border-t border-gray-800 pt-8">
+            <p>
+              <span className="inline-block w-3 h-3 bg-emerald-400 rounded-full mr-2"></span>
+              {transformedRooms.filter(r => r.isAvailable).length} rooms available
+              <span className="mx-4">•</span>
+              <span className="inline-block w-3 h-3 bg-red-400 rounded-full mr-2"></span>
+              {transformedRooms.filter(r => !r.isAvailable).length} rooms booked
+            </p>
           </div>
         )}
       </div>
