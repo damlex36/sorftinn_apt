@@ -19,12 +19,19 @@ type DjangoRoom = {
   is_available?: boolean;
 };
 
-// Helper to get full Cloudinary URL
+// Helper to get full Cloudinary URL with error handling
 const getFullImageUrl = (url: string): string => {
   if (!url) return '';
   
+  // Validate existing URLs
   if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
+    try {
+      new URL(url);
+      return url;
+    } catch {
+      console.warn('Invalid URL format:', url);
+      return '/fallback-room.jpg'; // Fallback image
+    }
   }
   
   if (url.includes('cloudinary') || url.includes('image/upload')) {
@@ -47,6 +54,11 @@ const transformRoomData = (djangoRoom: DjangoRoom) => {
     ?.map(img => getFullImageUrl(img.image))
     .filter(Boolean) || [];
   
+  // If no images, add a fallback
+  if (processedImages.length === 0) {
+    processedImages.push('/fallback-room.jpg');
+  }
+  
   return {
     id: Number(djangoRoom.id),
     name: djangoRoom.room_name,
@@ -65,9 +77,17 @@ export default async function RoomsPage({
 }: {
   searchParams: Promise<{ checkIn?: string; checkOut?: string }>
 }) {
-  const params = await searchParams;
-  const checkIn = params.checkIn || '2026-02-10';
-  const checkOut = params.checkOut || '2026-02-12';
+  // FIX 1: Properly await and handle searchParams
+  let checkIn = '2026-02-10';
+  let checkOut = '2026-02-12';
+  
+  try {
+    const resolvedParams = await searchParams;
+    checkIn = resolvedParams?.checkIn || checkIn;
+    checkOut = resolvedParams?.checkOut || checkOut;
+  } catch (error) {
+    console.warn('Error reading searchParams:', error);
+  }
   
   let rooms: DjangoRoom[] = [];
   let error: string | null = null;
@@ -123,9 +143,6 @@ export default async function RoomsPage({
           <p className="text-gray-400 text-lg max-w-3xl mx-auto">
             Discover refined comfort and timeless elegance in our carefully curated collection of rooms and suites.
           </p>
-          <p className="text-amber-400 mt-4">
-            📅 Showing availability for: {new Date(checkIn).toLocaleDateString()} - {new Date(checkOut).toLocaleDateString()}
-          </p>
         </div>
 
         {error && (
@@ -153,8 +170,6 @@ export default async function RoomsPage({
               <span className="inline-block w-3 h-3 bg-emerald-400 rounded-full mr-2"></span>
               {transformedRooms.filter(r => r.isAvailable).length} rooms available
               <span className="mx-4">•</span>
-              <span className="inline-block w-3 h-3 bg-red-400 rounded-full mr-2"></span>
-              {transformedRooms.filter(r => !r.isAvailable).length} rooms booked
             </p>
           </div>
         )}
