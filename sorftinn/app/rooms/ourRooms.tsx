@@ -72,21 +72,25 @@ const transformRoomData = (djangoRoom: DjangoRoom) => {
   };
 };
 
+// OPTION 2: Make searchParams optional
 export default async function RoomsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ checkIn?: string; checkOut?: string }>
+  searchParams?: Promise<{ checkIn?: string; checkOut?: string }>
 }) {
-  // FIX 1: Properly await and handle searchParams
+  // Default dates for homepage display
   let checkIn = '2026-02-10';
   let checkOut = '2026-02-12';
   
-  try {
-    const resolvedParams = await searchParams;
-    checkIn = resolvedParams?.checkIn || checkIn;
-    checkOut = resolvedParams?.checkOut || checkOut;
-  } catch (error) {
-    console.warn('Error reading searchParams:', error);
+  // Only try to use searchParams if they're provided
+  if (searchParams) {
+    try {
+      const resolvedParams = await searchParams;
+      checkIn = resolvedParams?.checkIn || checkIn;
+      checkOut = resolvedParams?.checkOut || checkOut;
+    } catch (error) {
+      console.warn('Error reading searchParams:', error);
+    }
   }
   
   let rooms: DjangoRoom[] = [];
@@ -153,7 +157,7 @@ export default async function RoomsPage({
 
         {transformedRooms.length === 0 && !error ? (
           <div className="text-center text-gray-400 py-20 text-xl">
-            No rooms found for the selected criteria.
+            No rooms found.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
