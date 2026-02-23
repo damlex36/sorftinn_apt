@@ -10,6 +10,7 @@ import OurStory from "./our story/OurStory";
 import { GallerySlides } from "./gallery/gallerySlide";
 import { Amenities } from "./amenities/amenities";
 import RoomsPage from "./rooms/ourRooms";
+import Testimonials from "./testimonial/page";
 export default function Home() {
   return (
     <div className="page">
@@ -19,6 +20,7 @@ export default function Home() {
        <GallerySlides/>
      <OurStory/>
      <Amenities/>
+     <Testimonials/>
     </div>
   );
 }

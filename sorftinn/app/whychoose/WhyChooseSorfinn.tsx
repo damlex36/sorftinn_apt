@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import {
   Wifi,
   ThermometerSun,
@@ -9,101 +11,220 @@ import {
   Dumbbell,
   Accessibility,
   MapPin,
-  GalleryHorizontalEnd,
+  Clock,
+  CalendarCheck,
+  Star,
 } from "lucide-react";
 
 const features = [
-  { Icon: Wifi, label: "High-Speed WiFi" },
-  { Icon: ThermometerSun, label: "Climate Control" },
-  { Icon: Wine, label: "Rooftop Bar" },
-  { Icon: CarFront, label: "Valet Parking" },
-  { Icon: Dumbbell, label: "Fitness Center" },
-  { Icon: Accessibility, label: "Full Accessibility" },
+  { Icon: Wifi, label: "High-Speed WiFi", description: "Stay connected with gigabit internet" },
+  { Icon: ThermometerSun, label: "Climate Control", description: "Perfect temperature, always" },
+  { Icon: Wine, label: "Rooftop Bar", description: "Craft cocktails with a view" },
+  { Icon: CarFront, label: "Valet Parking", description: "Hassle-free arrival & departure" },
+  { Icon: Dumbbell, label: "Fitness Center", description: "State-of-the-art equipment" },
+  { Icon: Accessibility, label: "Full Accessibility", description: "Inclusive design for all" },
+];
+
+const highlights = [
+  { Icon: Star, value: "4.9", label: "Guest Rating", color: "text-orange-500" },
+  { Icon: Clock, value: "24/7", label: "Concierge", color: "text-blue-600" },
+  { Icon: CalendarCheck, value: "1892", label: "Established", color: "text-orange-500" },
 ];
 
 export default function WhyChooseSorfinn() {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      }
+    }
+  };
+
   return (
-    <section id="features" className="py-14 md:py-18 bg-transparent text-white relative">
-      {/* Subtle background gradient matching sidebar */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/30 to-gray-950/30 pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-9 lg:gap-14 items-center">
-
-          {/* LEFT IMAGE CARD - Moderate height */}
-          <div className="relative rounded-xl overflow-hidden shadow-xl aspect-[4/3] lg:aspect-auto lg:h-[460px] ring-1 ring-amber-400/10 hover:ring-amber-400/30 transition-all duration-500">
-            <Image
-              src="/carousel/ceo.png"
-              alt="Luxury hotel lounge"
-              fill
-              className="object-cover hover:scale-105 transition-transform duration-700"
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-            <div className="absolute bottom-4 left-4 bg-gray-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-amber-400 text-xs font-medium tracking-wide border border-amber-400/20">
-              Since 1892
-            </div>
+    <section id="features" className="py-20 md:py-28 bg-white overflow-hidden">
+      <div className="container mx-auto px-5 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+          ref={ref}
+        >
+          <div className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-4">
+            <span className="w-2 h-2 bg-orange-500 rounded-full" />
+            <span className="text-sm font-medium tracking-wider text-blue-700 uppercase">
+              Why Choose Us
+            </span>
           </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            Experience <span className="text-orange-500">Unparalleled</span> Luxury
+          </h2>
+          <p className="text-lg text-gray-600">
+            Where every detail is crafted to perfection, ensuring your stay is nothing short of extraordinary.
+          </p>
+        </motion.div>
 
-          {/* RIGHT CONTENT - Balanced spacing */}
-          <div className="space-y-6 md:space-y-7 mt-7 lg:mt-0">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          
+          {/* LEFT COLUMN - Image with Stats Overlay */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative"
+          >
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/carousel/ceo.png"
+                alt="Luxury hotel experience"
+                width={800}
+                height={600}
+                className="w-full h-auto object-cover"
+              />
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent" />
+              
+              {/* Stats Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-blue-900/90 to-transparent">
+                <div className="grid grid-cols-3 gap-4">
+                  {highlights.map((item, index) => {
+                    const Icon = item.Icon;
+                    return (
+                      <div key={index} className="text-center">
+                        <div className="flex justify-center mb-1">
+                          <Icon className={`w-5 h-5 ${item.color}`} />
+                        </div>
+                        <p className={`text-xl font-bold ${item.color}`}>{item.value}</p>
+                        <p className="text-xs text-white/80">{item.label}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
-            <div className="space-y-3 text-center lg:text-left">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-white">
+            {/* Floating Badge */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={inView ? { scale: 1 } : {}}
+              transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
+              className="absolute -top-4 -right-4 bg-orange-500 text-white px-6 py-3 rounded-full shadow-xl"
+            >
+              <span className="font-bold text-lg">5★</span>
+              <span className="text-xs ml-1 opacity-90">Luxury</span>
+            </motion.div>
+          </motion.div>
+
+          {/* RIGHT COLUMN - Content */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="space-y-8"
+          >
+            {/* Feature Highlights */}
+            <div className="space-y-6">
+              <motion.h3 
+                variants={fadeInUp}
+                className="text-2xl md:text-3xl font-semibold text-blue-900"
+              >
                 Comfort or Celebration,
-                <br className="hidden sm:block" />
-                <span className="text-amber-400">we ve got you covered.</span>
-              </h2>
+                <br />
+                <span className="text-orange-500">we`ve got you covered.</span>
+              </motion.h3>
 
-              <p className="text-base text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Discover unparalleled luxury in the vibrant city center. Sorfinn Hotel
-                combines world-class service with sophisticated comfort.
-              </p>
+              <motion.p 
+                variants={fadeInUp}
+                className="text-gray-600 text-lg leading-relaxed"
+              >
+                Discover unparalleled luxury in the vibrant city center. Sorftinn Hotel
+                combines world-class service with sophisticated comfort, offering everything
+                you need for an unforgettable stay.
+              </motion.p>
             </div>
 
-            {/* Booking info row - Moderate spacing */}
-            <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4 sm:gap-6 text-sm text-gray-400 pt-3 border-t border-amber-400/10">
-              <div className="flex items-center gap-2 group hover:bg-amber-400/5 px-2 py-1 rounded-full transition-all duration-300">
-                <span className="text-amber-400 group-hover:scale-110 transition-transform">→</span>
-                <span>Check-in: <strong className="text-white text-sm">15:00</strong></span>
-              </div>
-              <div className="flex items-center gap-2 group hover:bg-amber-400/5 px-2 py-1 rounded-full transition-all duration-300">
-                <span className="text-amber-400 group-hover:scale-110 transition-transform">←</span>
-                <span>Check-out: <strong className="text-white text-sm">11:00</strong></span>
-              </div>
-              <div className="flex items-center gap-2 group hover:bg-amber-400/5 px-2 py-1 rounded-full transition-all duration-300">
-                <GalleryHorizontalEnd className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
-                <span>Gallery View</span>
-              </div>
-              <div className="flex items-center gap-2 group hover:bg-amber-400/5 px-2 py-1 rounded-full transition-all duration-300">
-                <MapPin className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
-                <span>Location View</span>
-              </div>
-            </div>
-
-            {/* Features - Moderate grid */}
-            <div className="pt-2">
-              <h3 className="text-xl font-semibold mb-5 text-center lg:text-left text-white">
-                Why Choose <span className="text-amber-400">Sorfinn</span>
-              </h3>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {features.map(({ Icon, label }) => (
-                  <div
-                    key={label}
-                    className="flex flex-col items-center bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-4 hover:border-amber-400/50 hover:bg-gray-900/80 hover:shadow-lg hover:shadow-amber-400/5 transition-all duration-300 group"
+            {/* Features Grid */}
+            <motion.div 
+              variants={fadeInUp}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              {features.map((feature, index) => {
+                const Icon = feature.Icon;
+                return (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className="group bg-white p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-orange-200"
                   >
-                    <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400 mb-2 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" strokeWidth={1.6} />
-                    <p className="text-xs sm:text-sm text-gray-300 text-center group-hover:text-white transition-colors duration-300">
-                      {label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-gradient-to-br from-blue-50 to-orange-50 rounded-lg">
+                        <Icon className="w-5 h-5 text-orange-500" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-blue-900 mb-1">{feature.label}</h4>
+                        <p className="text-xs text-gray-500">{feature.description}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
 
-          </div>
+            {/* Booking Info Bar */}
+            <motion.div 
+              variants={fadeInUp}
+              className="bg-gradient-to-r from-blue-50 to-orange-50 p-4 rounded-xl"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-orange-500" />
+                  <span className="text-sm text-gray-700">
+                    Check-in: <strong className="text-blue-900">3:00 PM</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-orange-500" />
+                  <span className="text-sm text-gray-700">
+                    Check-out: <strong className="text-blue-900">11:00 AM</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-orange-500" />
+                  <span className="text-sm text-gray-700">City Center Location</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* CTA Button */}
+            <motion.div 
+              variants={fadeInUp}
+              className="pt-4"
+            >
+              <button className="group relative px-8 py-4 bg-blue-900 text-white rounded-xl font-semibold overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+                <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <span className="relative flex items-center gap-2">
+                  Book Your Stay
+                  <CalendarCheck className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                </span>
+              </button>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>

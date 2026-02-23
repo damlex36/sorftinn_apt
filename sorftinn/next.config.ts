@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Add allowed qualities to fix the warning
+    qualities: [70, 75, 80, 85, 90], // 👈 ADD THIS LINE
+    
     remotePatterns: [
-        {
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me',
+      },
+      {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
         port: '',
-        pathname: '/**', // Allow all paths on res.cloudinary.com
+        pathname: '/**',
       },
-      // Add any other image hosts you use (like Unsplash)
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
@@ -27,14 +33,8 @@ const nextConfig = {
         port: '8000',
         pathname: '/media/**',
       },
-      // Keep your Unsplash one if you still have mock/fallback images
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
     ],
-    // ← This is the key line for local dev
+    // Keep your local IP setting
     dangerouslyAllowLocalIP: true,
   },
 };
