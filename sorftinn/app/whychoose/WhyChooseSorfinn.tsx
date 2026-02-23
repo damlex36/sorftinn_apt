@@ -34,7 +34,7 @@ export default function WhyChooseSorfinn() {
           {/* LEFT IMAGE CARD - Moderate height */}
           <div className="relative rounded-xl overflow-hidden shadow-xl aspect-[4/3] lg:aspect-auto lg:h-[460px] ring-1 ring-amber-400/10 hover:ring-amber-400/30 transition-all duration-500">
             <Image
-              src="/carousel/caro4.png"
+              src="/carousel/ceo.png"
               alt="Luxury hotel lounge"
               fill
               className="object-cover hover:scale-105 transition-transform duration-700"
