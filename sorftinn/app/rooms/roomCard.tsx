@@ -149,7 +149,7 @@ export default function RoomCard({ room }: { room: Room }) {
           </div>
 
           {room.isAvailable ? (
-            <Link href={`/Bookings/${room.id}?checkIn=2026-02-10&checkOut=2026-02-12`}>
+            <Link href={`/rooms/${room.id}`}>
               <button className="text-xs uppercase tracking-wider px-4 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition">
                 View Details
               </button>
