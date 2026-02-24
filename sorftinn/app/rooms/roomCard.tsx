@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +10,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
+  Wifi,
+  Tv,
+  Coffee,
+  Snowflake,
 } from "lucide-react";
 
 interface Room {
@@ -38,74 +42,127 @@ export default function RoomCard({ room }: { room: Room }) {
 
   return (
     <motion.div
-      whileHover={{ y: -6 }}
-      className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-[620px] flex flex-col"
+      whileHover={{ y: -5 }}
+      className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col"
     >
-      {/* Image */}
-      <div className="relative h-72 overflow-hidden">
+      {/* IMAGE */}
+      <div className="relative h-56 overflow-hidden">
         <Image
           src={room.images[index]}
           alt={room.name}
-          sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 380px" 
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Arrows */}
+        {/* carousel arrows */}
         {total > 1 && (
           <>
             <button
               onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-orange-500 hover:text-white"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 w-8 h-8 rounded-full flex items-center justify-center shadow hover:bg-orange-500 hover:text-white"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
             <button
               onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-orange-500 hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 w-8 h-8 rounded-full flex items-center justify-center shadow hover:bg-orange-500 hover:text-white"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </>
         )}
 
-        {/* Price */}
-        <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow border border-orange-500">
-          <span className="font-bold text-orange-500">
-            ₦{room.price.toLocaleString()}
-          </span>
+        {/* price */}
+        <div className="absolute top-3 right-3 bg-white px-3 py-1 rounded-full shadow border border-orange-500 text-sm font-semibold text-orange-500">
+          ₦{room.price.toLocaleString()}
+          <span className="text-gray-500 text-xs"> / night</span>
         </div>
 
-        <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-full shadow flex items-center gap-1">
+        {/* rating */}
+        <div className="absolute top-3 left-3 bg-white px-2 py-1 rounded-full shadow flex items-center gap-1 text-xs">
           <Star className="w-3 h-3 text-orange-500 fill-orange-500" />
-          <span className="text-xs font-medium">4.9</span>
+          4.9
+        </div>
+
+        {/* availability badge */}
+        <div className="absolute bottom-3 left-3">
+          {room.isAvailable ? (
+            <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+              Available
+            </span>
+          ) : (
+            <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full">
+              Fully Booked
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-xl font-bold mb-2 group-hover:text-orange-500 transition-colors">
-          {room.name}
-        </h3>
+   {/* CONTENT */}
+<div className="p-5 flex flex-col flex-1 justify-between">
+  
+  {/* Top Section */}
+  <div>
+    <div className="flex items-start justify-between">
+      <h3 className="text-lg font-semibold group-hover:text-orange-500 transition">
+        {room.name}
+      </h3>
 
-        <div className="flex items-center gap-3 text-sm text-gray-600 mb-4">
-          <Users className="w-4 h-4 text-orange-500" />
-          {room.maxOccupancy} guests
-          <Home className="w-4 h-4 text-orange-500 ml-4" />
-          Room
-        </div>
-
-        <p className="text-gray-600 text-sm flex-1 mb-4">
-          {room.description}
+      <span className="text-right">
+        <p className="text-sm text-gray-500">From</p>
+        <p className="text-lg font-bold text-orange-500">
+          ₦{room.price.toLocaleString()}
         </p>
+      </span>
+    </div>
 
-        <Link href={`/rooms/${room.id}`}>
-          <button className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-medium hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md">
-            View Details & Book
-          </button>
-        </Link>
+    <div className="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-600">
+      <div className="flex items-center gap-2">
+        <Users className="w-4 h-4 text-orange-500" />
+        {room.maxOccupancy} Guests
       </div>
+
+      <div className="flex items-center gap-2">
+        <Home className="w-4 h-4 text-orange-500" />
+        Deluxe Room
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Wifi className="w-4 h-4 text-gray-500" />
+        Free WiFi
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Snowflake className="w-4 h-4 text-gray-500" />
+        Air Conditioning
+      </div>
+    </div>
+
+    <p className="text-gray-600 text-sm mt-4 line-clamp-2">
+      {room.description}
+    </p>
+  </div>
+
+  {/* Bottom Section */}
+  <div className="mt-6 flex items-center justify-between">
+    {room.isAvailable ? (
+      <span className="text-green-600 text-sm font-medium">
+        ● Available
+      </span>
+    ) : (
+      <span className="text-red-600 text-sm font-medium">
+        ● Fully Booked
+      </span>
+    )}
+
+    <Link href={`/rooms/${room.id}`}>
+      <button className="px-5 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition">
+        View Details
+      </button>
+    </Link>
+  </div>
+</div>
     </motion.div>
   );
 }
