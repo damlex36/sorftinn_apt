@@ -125,7 +125,7 @@ export default function RoomsPage({
   }
 
   return (
-    <section className="bg-white py-20 overflow-hidden">
+    <section id="rooms" className="bg-white py-20 overflow-hidden">
       <ImagePreloader images={allImages} />
 
       <div className="max-w-7xl mx-auto px-6 relative">

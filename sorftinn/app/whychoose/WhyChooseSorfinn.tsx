@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -212,6 +212,7 @@ export default function WhyChooseSorfinn() {
             </motion.div>
 
             {/* CTA Button */}
+            <Link href={`/#booking?`}>
             <motion.div 
               variants={fadeInUp}
               className="pt-4"
@@ -224,6 +225,7 @@ export default function WhyChooseSorfinn() {
                 </span>
               </button>
             </motion.div>
+            </Link>
           </motion.div>
         </div>
       </div>

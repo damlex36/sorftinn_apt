@@ -143,6 +143,7 @@ export default function HeroWithNavbar() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
               onSubmit={handleSearch}
+              id="booking"
               className="w-full max-w-xs sm:max-w-md md:max-w-4xl bg-white/95 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl mx-4"
             >
               <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-6">

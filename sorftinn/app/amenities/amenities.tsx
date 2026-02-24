@@ -167,12 +167,7 @@ export function Amenities() {
           transition={{ delay: 0.5 }}
           className="text-center mt-20"
         >
-          <button className="px-10 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-orange-500/40 transition">
-            <span className="flex items-center gap-2">
-              Explore All Amenities
-              <ArrowRight className="w-5 h-5" />
-            </span>
-          </button>
+         
         </motion.div>
       </div>
     </section>
