@@ -65,7 +65,7 @@ export default function BookingSuccess() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-azure mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm text-foreground">Sorftinn Hotel</p>
+                  <p className="text-sm text-foreground">GreyFindor Hotel</p>
                   <p className="text-xs text-muted-foreground">
                     123 Luxury Avenue, Downtown
                   </p>
@@ -92,7 +92,7 @@ export default function BookingSuccess() {
               <div className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-azure mt-0.5 shrink-0" />
                 <p className="text-sm text-foreground">
-                  reservations@sorftinn.com
+                  reservations@GreyFindorHotel.com
                 </p>
               </div>
             </div>

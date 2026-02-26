@@ -153,7 +153,7 @@ export default function WhyChooseSorfinn() {
                 variants={fadeInUp}
                 className="text-gray-600 text-lg leading-relaxed"
               >
-                Discover unparalleled luxury in the vibrant city center. Sorftinn Hotel
+                Discover unparalleled luxury in the vibrant city center. GreyFindor Hotel
                 combines world-class service with sophisticated comfort, offering everything
                 you need for an unforgettable stay.
               </motion.p>

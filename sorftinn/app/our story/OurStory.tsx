@@ -55,7 +55,7 @@ export default function OurStory() {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/carousel/man.jpg"
+                src="/carousel/story.jpg"
                 alt="Hotel lobby historic elegance"
                 width={800}
                 height={600}
@@ -108,7 +108,7 @@ export default function OurStory() {
             {/* Description */}
             <motion.div variants={fadeInUp} className="space-y-4">
               <p className="text-lg text-gray-700 leading-relaxed">
-                Nestled in the heart of the city, Sorftinn Hotel has been a beacon of 
+                Nestled in the heart of the city, GreyFindor Hotel has been a beacon of 
                 <span className="text-blue-700 font-semibold"> refined hospitality since 1892</span>. 
                 Our commitment to impeccable service and timeless elegance has made us the 
                 preferred destination for discerning travelers seeking an extraordinary experience.
@@ -158,7 +158,7 @@ export default function OurStory() {
                 </div>
                 <div>
                   <p className="text-gray-600 italic text-sm">`Where every stay becomes a memory`</p>
-                  <p className="text-blue-900 font-semibold text-sm mt-1">— The Sorftinn Family</p>
+                  <p className="text-blue-900 font-semibold text-sm mt-1">— The GreyFindor Family</p>
                 </div>
               </div>
             </motion.div>

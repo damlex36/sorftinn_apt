@@ -19,7 +19,7 @@ const amenities = [
     description:
       "Three acclaimed restaurants offering world-class cuisine from renowned chefs.",
     highlight: "Michelin-starred",
-    image: "/carousel/caro3.png",
+    image: "/carousel/dinner.jpg",
   },
   {
     icon: Waves,
@@ -27,7 +27,7 @@ const amenities = [
     description:
       "Rooftop pool with breathtaking views and private cabanas for ultimate relaxation.",
     highlight: "Heated",
-    image: "/carousel/caro2.png",
+    image: "/carousel/swim.jpg",
   },
   {
     icon: Dumbbell,
@@ -35,7 +35,7 @@ const amenities = [
     description:
       "Full-service spa and fitness center with personal training available.",
     highlight: "Award-winning",
-    image: "/carousel/caro4.png",
+    image: "/carousel/yoga.jpg",
   },
   {
     icon: Car,
@@ -43,7 +43,7 @@ const amenities = [
     description:
       "Complimentary valet parking and luxury car service upon request.",
     highlight: "24/7",
-    image: "/carousel/caro1.png",
+    image: "/carousel/tenise.jpg",
   },
 ];
 

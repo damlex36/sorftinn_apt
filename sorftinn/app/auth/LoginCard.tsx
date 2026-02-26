@@ -72,7 +72,7 @@ export default function LoginCard({
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              placeholder="staff@sorftinn.com"
+              placeholder="staff@GreyFindorHotel.com"
               className="w-full px-5 py-3.5 bg-white/80 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-300 placeholder-gray-400 shadow-sm"
             />
           </div>

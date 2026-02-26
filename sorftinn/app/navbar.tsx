@@ -17,17 +17,17 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 ======================= */
 const slides = [
   {
-    url: "/carousel/caro1.png",
+    url: "/carousel/caro7.jpg",
     title: "Welcome to Paradise",
-    subtitle: "Experience Luxury at Sorftinn Hotel",
+    subtitle: "Experience Luxury at GreyFindor Hotel",
   },
   {
-    url: "/carousel/caro2.png",
+    url: "/carousel/caro9.jpg",
     title: "Oceanfront Serenity",
     subtitle: "Unwind in Pure Elegance",
   },
   {
-    url: "/carousel/caro3.png",
+    url: "/carousel/caro6.jpg",
     title: "Timeless Elegance",
     subtitle: "Sophisticated Interiors Await",
   },
@@ -229,7 +229,7 @@ export default function HeroWithNavbar() {
               className="relative w-9 h-9 sm:w-11 sm:h-11"
             >
               <Image 
-                src="/logo.jpg" 
+                src="/logo.png" 
                 alt="Logo" 
                 fill
                 sizes="44px"
@@ -242,7 +242,7 @@ export default function HeroWithNavbar() {
                 scrolled ? "text-blue-900" : "text-white"
               }`}
             >
-              Sorftinn
+              GreyFindor Hotel
             </motion.span>
           </Link>
 

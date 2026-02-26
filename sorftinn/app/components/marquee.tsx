@@ -12,7 +12,7 @@ interface MarqueeProps {
 }
 
 const defaultText =
-  "SORFTINN LUXURY HOTEL • EXPERIENCE ELEGANCE • BOOK YOUR STAY • ";
+  "GREYFINDOR LUXURY HOTEL • EXPERIENCE ELEGANCE • BOOK YOUR STAY • ";
 
 export function Marquee({
   text = defaultText,

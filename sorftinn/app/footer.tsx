@@ -15,7 +15,7 @@ export function Footer() {
               Stay <span className="text-amber-400">Connected</span>
             </h3>
             <p className="font-body text-sm sm:text-base text-gray-400 mb-6 sm:mb-8 px-4">
-              Subscribe to receive exclusive offers and updates from Sorftinn Hotel.
+              Subscribe to receive exclusive offers and updates from GreyFindor Hotel.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto px-4 sm:px-0">
               <Input
@@ -40,7 +40,7 @@ export function Footer() {
             <div className="flex flex-col items-center sm:items-start">
               <div className="flex items-center gap-2 mb-4">
                 <span className="font-display text-xl sm:text-2xl lg:text-3xl font-semibold text-white">
-                  Sorftinn
+                  GreyFindor 
                 </span>
                 <span className="text-amber-400 text-[10px] sm:text-xs font-body tracking-[0.3em] uppercase">
                   Hotel
@@ -111,10 +111,10 @@ export function Footer() {
               <li className="flex items-center gap-2">
                 <Mail size={16} className="sm:w-5 sm:h-5 text-amber-400 flex-shrink-0" />
                 <a
-                  href="mailto:info@sorftinn.com"
+                  href="mailto:info@GreyFindorHotel.com"
                   className="font-body text-xs sm:text-sm text-gray-400 hover:text-amber-400"
                 >
-                  info@sorftinn.com
+                  info@GreyFindorHotel.com
                 </a>
               </li>
             </ul>
@@ -145,7 +145,7 @@ export function Footer() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             <p className="font-body text-xs text-gray-500 order-2 md:order-1">
-              © 2026 Sorftinn Hotel. All rights reserved. <br className="block sm:hidden" />
+              © 2026 GreyFindor Hotel. All rights reserved. <br className="block sm:hidden" />
               <span className="text-amber-400/70">© 2026 Damola</span>
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 order-1 md:order-2">

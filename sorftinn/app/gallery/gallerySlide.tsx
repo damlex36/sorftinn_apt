@@ -14,10 +14,10 @@ import {
 
 // Images in public/carousel/
 const galleryImages = [
-  { src: "/carousel/caro1.png" },
-  { src: "/carousel/caro2.png" },
-  { src: "/carousel/caro3.png" },
-  { src: "/carousel/caro4.png" },
+  { src: "/carousel/caro6.jpg" },
+  { src: "/carousel/caro7.jpg" },
+  { src: "/carousel/caro8.jpg" },
+  { src: "/carousel/caro9.jpg" },
   { src: "/carousel/caro5.jpg" },
 ];
 
